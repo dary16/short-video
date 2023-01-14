@@ -1,0 +1,51 @@
+{
+  "id": "3853156",
+  "name": "shortVideo",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "10450959",
+      "name": "note记事本",
+      "font_class": "note",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "20526405",
+      "name": "视频",
+      "font_class": "shipin",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "7992525",
+      "name": "报表模板",
+      "font_class": "baobiaomoban",
+      "unicode": "e6f0",
+      "unicode_decimal": 59120
+    },
+    {
+      "icon_id": "27374469",
+      "name": "文案提取",
+      "font_class": "wenantiqu",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "28986136",
+      "name": "违禁词检测",
+      "font_class": "weijincijiance",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
+      "icon_id": "29731519",
+      "name": "违禁词",
+      "font_class": "weijinci",
+      "unicode": "e67d",
+      "unicode_decimal": 59005
+    }
+  ]
+}
