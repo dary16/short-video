@@ -11,13 +11,13 @@
 			<view class="left-text">
 				<view class="left">
 					<view class="text-top">专属高佣</view>
-					<view class="text-bottom">40%</view>
+					<view class="text-bottom">{{dataList.discount}}</view>
 					<!-- <u--text color="#fff" size="13" text="专属高佣"></u--text>
 					<u--text :block="false" size="18" color="#fff" text="40%"></u--text> -->
 				</view>
 				<view class="center">
 					<view class="text-top">价格</view>
-					<view class="text-bottom">¥9.90</view>
+					<view class="text-bottom">¥{{dataList.original_price}}</view>
 				</view>
 			</view>
 			<view class="right-text">
@@ -39,14 +39,14 @@
 		</view>
 		<view class="list-wrap">
 			<view class="list-box">
-				<view class="list-title">{{dataList.title}}</view>
+				<view class="list-title">{{dataList.name}}</view>
 				<view class="list-block">
 					<u-row customStyle="margin-bottom: 10px">
 						<u-col span="3">
 							<u--text type="info" size="14" :block="true" text="已售件数"></u--text>
 						</u-col>
 						<u-col span="9">
-							{{dataList.saleNum}}
+							{{dataList.sales_initial}}
 						</u-col>
 					</u-row>
 					<u-row customStyle="margin-bottom: 10px">
@@ -54,7 +54,7 @@
 							<u--text type="info" size="14" :block="true" text="发货地"></u--text>
 						</u-col>
 						<u-col span="9">
-							{{dataList.sendAddress}}
+							{{dataList.location}}
 						</u-col>
 					</u-row>
 					<u-row customStyle="margin-bottom: 10px">
@@ -63,7 +63,7 @@
 							</u--text>
 						</u-col>
 						<u-col span="9">
-							<u--text :block="true" :text="dataList.startDay"></u--text>
+							<u--text :block="true" :text="dataList.started_at"></u--text>
 						</u-col>
 					</u-row>
 					<u-row customStyle="margin-bottom: 10px">
@@ -71,7 +71,7 @@
 							<u--text type="info" :block="true" size="14" text="结束时间"></u--text>
 						</u-col>
 						<u-col span="9">
-							<u--text :block="true" :text="dataList.endDay"></u--text>
+							<u--text :block="true" :text="dataList.ended_at"></u--text>
 						</u-col>
 					</u-row>
 				</view>
@@ -79,10 +79,10 @@
 		</view>
 		<view class="list-wrap">
 			<view class="list-box">
-				<view class="shop-name">{{dataList.storeName}}</view>
+				<view class="shop-name">{{dataList.shop_name}}</view>
 				<view class="list-ul">
 					<view class="list-li">
-						<u--text align="center" size="18" :text="dataList.storeScore"></u--text>
+						<u--text align="center" size="18" :text="dataList.shop_star"></u--text>
 						<u--text align="center" size="12" type="info" text="商家体验分"></u--text>
 					</view>
 					<view class="list-line">
@@ -90,28 +90,28 @@
 					</view>
 					<view class="list-li">
 						<view class="rate">
-							<text class="score">{{dataList.goodScore}}</text>
-							<text class="level" v-if="dataList.goodScore >= 4.8">高</text>
-							<text class="level" v-else-if="dataList.goodScore >= 4.6 && dataList.goodScore < 4.8">中</text>
-							<text class="level" v-else>低</text>
+							<text class="score">{{dataList.goods_star}}</text>
+							<text class="level">高</text>
+							<!-- <text class="level" v-else-if="dataList.goods_star >= 4.6 && dataList.goodScore < 4.8">中</text>
+							<text class="level" v-else>低</text> -->
 						</view>
 						<u-text align="center" size="12" type="info" text="商品体验"></u-text>
 					</view>
 					<view class="list-li">
 						<view class="rate">
-							<text class="score">{{dataList.goodService}}</text>
-							<text class="level" v-if="dataList.goodService >= 4.8">高</text>
-							<text class="level" v-else-if="dataList.goodService >= 4.6 && dataList.goodService < 4.8">中</text>
-							<text class="level" v-else>低</text>
+							<text class="score">{{dataList.service_star}}</text>
+							<text class="level">高</text>
+							<!-- <text class="level" v-else-if="dataList.goodService >= 4.6 && dataList.goodService < 4.8">中</text>
+							<text class="level" v-else>低</text> -->
 						</view>
 						<u--text align="center" size="12" type="info" text="商品服务"></u--text>
 					</view>
 					<view class="list-li">
 						<view class="rate">
-							<text class="score">{{dataList.logisticsScore}}</text>
-							<text class="level" v-if="dataList.logisticsScore >= 4.8">高</text>
-							<text class="level" v-else-if="dataList.logisticsScore >= 4.6 && dataList.logisticsScore < 4.8">中</text>
-							<text class="level" v-else>低</text>
+							<text class="score">{{dataList.delivery_star}}</text>
+							<text class="level">高</text>
+							<!-- <text class="level" v-else-if="dataList.logisticsScore >= 4.6 && dataList.logisticsScore < 4.8">中</text>
+							<text class="level" v-else>低</text> -->
 						</view>
 						<u--text align="center" size="12" type="info" text="物流体验"></u--text>
 					</view>
@@ -141,12 +141,7 @@
 	export default {
 		data() {
 			return {
-				list: [
-					'../../static/goods-images/1.png',
-					'../../static/goods-images/2.png',
-					'../../static/goods-images/3.png',
-					'../../static/goods-images/4.png'
-				],
+				list: [],
 				current: 0,
 				timeData: {
 					day: 0,
@@ -154,27 +149,22 @@
 					min: 0,
 					second: 0
 				},
-				dataList: {
-					title: '味仙居[完全不辣]不辣的麻辣香锅底料炒酱香干锅调料包A',
-					saleNum: '2.5w',
-					sendAddress: '48小时内从河南省发货，包邮',
-					startDay: '2022-12-22',
-					endDay: '2023-10-21',
-					storeName: '味仙居官方旗舰店',
-					storeScore: '4.89',
-					goodScore: '4.09',
-					goodService: '4.98',
-					logisticsScore: '4.87'
-				},
+				dataList: {},
 				imgList: [{
 					src: ''
 				}]
 			};
 		},
 		onLoad(v) {
-			let data = JSON.parse(v.dataInfo);
-			console.log(data, this)
-			this.getTime();
+			let data = v;
+			
+			console.log(1111);
+			console.log(data);
+			console.log(data.dataInfo)
+			// this.dataList = JSON.parse(data);
+			// console.log(this.dataList);
+			this.list = data.images;
+			// this.getTime();
 		},
 		mounted() {
 			
@@ -244,11 +234,11 @@
 					}
 					return time;
 				}
-				setInterval(()=>{
-					this.hastime = timeStamp(1700200897);
-					this.timeData = this.hastime;
-					console.log(this.timeData)
-				},1000)
+				// setInterval(()=>{
+				// 	this.hastime = timeStamp(1700200897);
+				// 	this.timeData = this.hastime;
+				// 	console.log(this.timeData)
+				// },1000)
 			},
 		}
 	}

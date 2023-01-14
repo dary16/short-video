@@ -4,8 +4,7 @@
 			console.warn('当前组件仅支持 uni_modules 目录结构 ，请升级 HBuilderX 到 3.1.0 版本以上！')
 			console.log('App Launch')
 			wx.cloud.init({
-				env: 'prod-1gon0lll2312bfb2',
-				traceUser: true
+				env: 'prod-1gon0lll2312bfb2'
 			})
 		},
 		onShow: function() {
@@ -27,6 +26,7 @@
 	// 设置整个项目的背景色
 	page {
 		background-color: #f5f5f5;
+		
 	}
 
 	/* #endif */

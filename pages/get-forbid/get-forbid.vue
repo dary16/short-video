@@ -2,7 +2,7 @@
 	<view>
 		<view class="title">违禁词检测</view>
 		<view class="text-wrap">
-			<u--textarea v-model="value" placeholder="请输入待检测内容" @blur="blurFn" confirmType="done"></u--textarea>
+			<u--textarea v-model="wait_text" placeholder="请输入待检测内容" @blur="blurFn" confirmType="done"></u--textarea>
 		</view>
 		<view class="text-wrap">
 			<u-row class="btn-group" justify="space-between" gutter="10">
@@ -10,14 +10,14 @@
 					<u-button type="primary" :plain="true" :text="text" @click="doFn()"></u-button>
 				</u-col>
 				<u-col span="6">
-					<u-button type="primary" text="立即检测" @click="check"></u-button>
+					<u-button type="primary" text="立即检测" @click="checkText()"></u-button>
 				</u-col>
 			</u-row>
 		</view>
 		<view class="text-wrap" v-show="show">
 			<view class="title">检测结果</view>
 			<view class="forbid-result">
-				包含违禁词
+				<view class="title">包含违禁词</view>
 				<u--text type="warning" :text="forbidText"></u--text>
 			</view>
 		</view>
@@ -28,8 +28,8 @@
 	export default {
 		data() {
 			return {
-				value: '',
-				description: '已为您提取原视频',
+				wait_text: '',
+				description: '检测成功',
 				text: '粘贴内容',
 				show: false,
 				forbidText: ''
@@ -37,26 +37,53 @@
 		},
 		methods:{
 			doFn(){
-				if(this.text == '粘贴内容'){
+				let that = this
+				that.show = false
+				if (that.text == '粘贴文本') {
 					uni.getClipboardData({
-						success: function (res) {
-							console.log(res.data);
-							this.value = res.data;
-							this.text = '清空内容'
-						}
+						success: function(res) {
+							that.wait_text = res.data;
+							that.text = '清空内容'
+						},
+						fail: function(res) {
+							console.log(11111)
+						},
 					});
-				}else{
-					this.value = '';
-					this.text = '粘贴内容';
+				} else {
+					that.wait_text = '';
+					that.text = '粘贴文本';
 				}
 				
 			},
-			check(){
-				this.show = true;
-				this.forbidText = '傻逼'
+			async checkText() {
+				const result = await wx.cloud.callContainer({
+					config: {
+						env: 'prod-1gon0lll2312bfb2',
+					},
+					path: '/api/wechat/mini/tools/check-content',
+					method: 'POST',
+					data: {content: this.wait_text},
+					header: {
+						'X-WX-SERVICE': 'laravel-06z8',
+						'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
+					}
+				});
+				if(result.statusCode == 200){
+					if (result.data.code == 2001 && result.data.data.is_invalid) {
+						this.show = true
+						this.forbidText = result.data.data.words.join('、');
+					} else {
+						uni.showToast({
+							title: result.data.msg,
+							icon: 'fail',
+							duration: 2000
+						});
+					}
+					
+				}
 			},
 			blurFn(){
-				if(this.value != ''){
+				if(this.wait_text != ''){
 					this.text = '清空内容'
 				}
 				console.log('失去焦点');
@@ -121,7 +148,10 @@
 			border-radius: 8px;
 			margin: 0 auto;
 			background-color: #fff;
-			padding: 5px 10px;
+			padding: 10px 20px;
+			.title {
+				color:#ff007f;
+			}
 		}
 	}
 

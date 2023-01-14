@@ -5,63 +5,82 @@
 		</view>
 		<view class="grid-list">
 			<u-grid :border="false" col="4">
-				<u-grid-item v-for="(listItem,listIndex) in list" :key="listIndex" @click="gridFn(listIndex)">
-					<view class="icon iconfont" :class="listItem.class" :style="listItem.style"></view>
-					<text class="grid-text">{{listItem.title}}</text>
+				<u-grid-item style="padding-top: 10px;" @click="gridFn(0)">
+					<view class="icon iconfont icon-shipin iconlist0"></view>
+					<text class="grid-text">视频提取</text>
+				</u-grid-item>
+				<u-grid-item style="padding-top: 10px;" @click="gridFn(1)">
+					<view class="icon iconfont icon-baobiaomoban iconlist1"></view>
+					<text class="grid-text">获取文案</text>
+				</u-grid-item>
+				<u-grid-item style="padding-top: 10px;" @click="gridFn(2)">
+					<view class="icon iconfont icon-note iconlist2"></view>
+					<text class="grid-text">模板素材</text>
+				</u-grid-item>
+				<u-grid-item style="padding-top: 10px;" @click="gridFn(3)">
+					<view class="icon iconfont icon-weijincijiance iconlist3"></view>
+					<text class="grid-text">违禁词检测</text>
 				</u-grid-item>
 			</u-grid>
 		</view>
 		<view class="goods-list">
-			<view class="goods-title">商品列表</view>
-			<view v-for="(item,index) in goodsList" :key="index" @click="goodInfo">
-				<u-row class="good-box">
-					<u-col span="4">
-						<div class="flex-content">
-							<u-image :src="item.imgUrl" width="90px" height="90px" :lazy-load="true"></u-image>
-						</div>
-					</u-col>
-					<u-col span="8">
-						<div class="good-desc">{{item.title}}</div>
-						<div class="good-info">
-							<view class="good-price">价格：¥{{item.price}}</view>
-							<view class="good-tag">
-								<u-tag bgColor="#f5cfad" size="mini" color="#f00" shape="circle" borderColor="#f5cfad" :text="item.charge"></u-tag>
-							</view>
-						</div>
-					</u-col>
-				</u-row>
-			</view>
+			<!-- <view class="goods-title">商品列表</view> -->
+			<u-empty mode="list" text="商品待添加,请耐心等候!">
+			</u-empty>
+			<!-- <view v-if="loading"></view> -->
+			<!-- <template>
+				<view v-if="goodsList.length > 0" v-for="(item,index) in goodsList" :key="index" @click="goodInfo(item)">
+					<u-row class="good-box">
+						<u-col span="4">
+							<div class="flex-content">
+								<u-image :src="item.images[0]" width="90px" height="90px" :lazy-load="true"></u-image>
+							</div>
+						</u-col>
+						<u-col span="8">
+							<div class="good-desc">{{item.name}}</div>
+							<div class="good-info">
+								<view class="good-price">价格：¥{{item.original_price}}</view>
+								<view class="good-tag">
+									高佣 {{item.discount}}
+									 <!-- <u-badge :type="type" max="99" :value="item.discount"></u-badge> -->
+			<!-- <u-tag bgColor="#f5cfad" size="mini" color="#f00" shape="circle" borderColor="#f5cfad" :text="item.discount"></u-tag> -->
+			<!-- </view>
+							</div>
+						</u-col>
+					</u-row>
+				</view>
+				<view v-else>
+					<u-empty
+					        mode="list"
+							text="暂无数据"
+					>
+					</u-empty>
+				</view>
+			</template>
+			
+			<u-loadmore :status="status" /> -->
 		</view>
-		<u-tabbar
-			:value="currentNum"
-			@change="changeTab"
-			:fixed="true"
-			:border="false"
-			:placeholder="false"
-			:safeAreaInsetBottom="false"
-		>
-			<u-tabbar-item text="首页" icon="home" @click="click1" ></u-tabbar-item>
-			<u-tabbar-item text="我的" icon="account" @click="mineFn" ></u-tabbar-item>
+
+		<u-tabbar :value="currentNum" @change="changeTab" :fixed="true" :border="false" :placeholder="false"
+			:safeAreaInsetBottom="false">
+			<u-tabbar-item text="首页" icon="home" @click="click1"></u-tabbar-item>
+			<u-tabbar-item text="我的" icon="account" @click="mineFn"></u-tabbar-item>
 		</u-tabbar>
 	</view>
 </template>
 
 <script>
-	import {getgoodlisturl} from '@/api/api.js';
-	import {postlist} from '@/api/request.js';
 	export default {
 		data() {
 			return {
 				currentNum: 0,
-				testData: {
-					name: 'admin',
-					age: 18
-				},
+				status: 'loadmore',
+				loading: true,
 				href: 'https://uniapp.dcloud.io/component/README?id=uniui',
 				list1: [
-					'https://cdn.uviewui.com/uview/swiper/swiper1.png',
-					'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-					'https://cdn.uviewui.com/uview/swiper/swiper3.png',
+					'https://short-video-1259353699.cos.ap-guangzhou.myqcloud.com/web/b01.png',
+					'https://short-video-1259353699.cos.ap-guangzhou.myqcloud.com/web/b02.png',
+					'https://short-video-1259353699.cos.ap-guangzhou.myqcloud.com/web/b03.png',
 				],
 				list: [{
 						class: 'icon-shipin',
@@ -84,7 +103,7 @@
 						title: '获取文案'
 					},
 					{
-						class: 'icon-weijincijiance',
+						class: 'icon-note',
 						style: {
 							'color': '#ef9949',
 							'font-size': '30px',
@@ -104,19 +123,11 @@
 						title: '违禁词检测'
 					},
 				],
-				goodsList: [{
-						imgUrl: '//img10.360buyimg.com/n2/s240x240_jfs/t1/210890/22/4728/163829/6163a590Eb7c6f4b5/6390526d49791cb9.jpg!q70.jpg',
-						title: '活蟹】湖塘煙雨 阳澄湖大闸蟹公4.5两 母3.5两 4对8只 鲜活生鲜螃蟹现货水产礼盒海鲜水',
-						price: '388',
-						charge: '高佣78%',
-					},
-					{
-						imgUrl: '//img10.360buyimg.com/n2/s240x240_jfs/t1/210890/22/4728/163829/6163a590Eb7c6f4b5/6390526d49791cb9.jpg!q70.jpg',
-						title: '活蟹】湖塘煙雨 阳澄湖大闸蟹公4.5两 母3.5两 4对8只 鲜活生鲜螃蟹现货水产礼盒海鲜水',
-						price: '388',
-						charge: '高佣68%',
-					},
-				],
+				goodsList: [],
+				params: {
+					page: 1,
+					page_size: 10
+				}
 			}
 		},
 		onLoad() {
@@ -124,65 +135,74 @@
 		},
 		methods: {
 			change() {},
-			changeTab(){},
-			click1(){},
-			async getGoodsList(){
-				let params = {
-					page: '2',
-					page_size: '10'
-				}
-				/* uni.request({
-					url: 'http://laravel-06z8-26118-6-1316511786.sh.run.tcloudbase.com/contents/goods-list',
-					method: 'POST',
-					data: params,
-					success: (res)=>{
-						console.log(res);
-					},
-					fail: (err)=>{
-						console.log(err)
-					}
-				}) */
+			changeTab() {},
+			click1() {},
+			commonClass(i) {
+				return "iconlist" + i
+			},
+			async getGoodsList() {
 				const result = await wx.cloud.callContainer({
 					config: {
 						env: 'prod-1gon0lll2312bfb2',
 					},
-				    path: '/api/wechat/mini/contents/goods-list',
-				    method: 'GET',
+					path: '/api/wechat/mini/contents/goods-list',
+					method: 'GET',
+					data: this.params,
 					header: {
-						  'X-WX-SERVICE': 'laravel-06z8-011',
-						  'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
-						}
-				    })
-				    console.log(result)
+						'X-WX-SERVICE': 'laravel-06z8',
+						'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
+					}
+				})
+				if (result.statusCode == 200) {
+					let {
+						page,
+						page_size
+					} = this.params;
+					let resultData = result.data.data.list;
+					if (resultData.length < page_size) {
+						this.status = 'nomore'
+					}
+					if (page == 1) {
+						this.goodsList = resultData
+					} else {
+						this.getGoodsList = [...this.goodsList, ...resultData];
+					}
+				}
+				if (this.loading) {
+					setTimeout(() => {
+						this.loading = false;
+					}, 1000);
+				}
 			},
-			gridFn(i){
-				if(i == 0){
+			// 上拉加载
+			gridFn(i) {
+				if (i == 0) {
 					uni.navigateTo({
 						url: '/pages/get-video/get-video'
 					})
-				}else if(i == 1){
+				} else if (i == 1) {
 					uni.navigateTo({
 						url: '/pages/get-text/get-text'
 					})
-				}else if(i == 2){
+				} else if (i == 2) {
 					uni.navigateTo({
 						url: '/pages/get-module/get-module'
 					})
-				}else if(i == 3){
+				} else if (i == 3) {
 					uni.navigateTo({
 						url: '/pages/get-forbid/get-forbid'
 					})
 				}
 			},
-			mineFn(){
+			mineFn() {
 				uni.navigateTo({
 					url: '/pages/mine/mine'
 				})
 			},
-			goodInfo(){
-				let dataInfo =  JSON.stringify(this.testData);
+			goodInfo(data) {
+				let dataInfo = JSON.stringify(data);
 				uni.navigateTo({
-					url: '/pages/good-info/good-info?dataInfo='+ dataInfo
+					url: '/pages/good-info/good-info?dataInfo=' + dataInfo
 				})
 			}
 		}
@@ -190,6 +210,38 @@
 </script>
 
 <style lang="scss" scoped>
+	.list-icon {
+		font-size: 26px;
+	}
+
+	.iconlist0 {
+		color: #b98be5;
+		font-size: 35px;
+		height: 35px;
+		line-height: 40px;
+	}
+
+	.iconlist1 {
+		color: #0acc8b;
+		font-size: 32px;
+		height: 35px;
+		line-height: 40px;
+	}
+
+	.iconlist2 {
+		color: #ef9949;
+		font-size: 40px;
+		height: 40px;
+		line-height: 40px;
+	}
+
+	.iconlist3 {
+		color: #5996f2;
+		font-size: 36px;
+		height: 36px;
+		line-height: 40px;
+	}
+
 	.container {
 		padding: 20px;
 		font-size: 14px;
@@ -212,8 +264,9 @@
 
 		.goods-list {
 			width: 100%;
-			margin: 0 auto;
-			margin-bottom: 50px;
+			margin-top: 50px;
+			// margin: 0 auto;
+			// margin-bottom: 50px;
 
 			.goods-title {
 				font-size: 16px;
@@ -221,7 +274,8 @@
 				padding: 10px;
 				text-align: left;
 			}
-			.good-box{
+
+			.good-box {
 				width: 96%;
 				margin: 0 auto;
 				background-color: #fff;
@@ -256,6 +310,11 @@
 
 				.good-tag {
 					float: right;
+					background-color: #f5cfad;
+					color: #f00;
+					border-radius: 16px;
+					padding: 0 6px;
+					font-size: 13px;
 				}
 			}
 		}

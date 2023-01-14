@@ -2,7 +2,9 @@
 	<view>
 		<view class="title">提取文案</view>
 		<view class="text-wrap">
-			<u--textarea v-model="value" placeholder="请输入内容" @blur="blurFn" confirmType="done"></u--textarea>
+			<u--textarea v-model="params.input_url" placeholder="请输入抖音分享链接" confirmType="done" @blur="blurFn()"
+				@input="blurFn()"></u--textarea>
+
 		</view>
 		<view class="text-wrap">
 			<u-row class="btn-group" justify="space-between" gutter="10">
@@ -10,7 +12,24 @@
 					<u-button type="primary" :plain="true" :text="text" @click="doFn()"></u-button>
 				</u-col>
 				<u-col span="6">
-					<u-button type="primary" text="一键提取"></u-button>
+					<u-button type="primary" text="获取文案" @click="parseVideo()"></u-button>
+				</u-col>
+			</u-row>
+		</view>
+		<view class="text-wrap" v-show="videoText != ''">
+			<u-row>
+				<u-col class="video-text" span="12" customStyle="margin-bottom: 10px">
+					<view class="video-alert">
+						<u-alert style="width: 160px;" type="success" :show-icon="true" :description="description"></u-alert>
+					</view>
+					<view class="save-picture">
+						<u-button type="primary" text="复制文案" @click="saveText()"></u-button>
+					</view>
+				</u-col>
+			</u-row>
+			<u-row class="video-wrap">
+				<u-col class="video-box" span="12">
+					<u--textarea v-model="videoText"></u--textarea>
 				</u-col>
 			</u-row>
 		</view>
@@ -21,31 +40,84 @@
 	export default {
 		data() {
 			return {
-				value: '',
-				description: '已为您提取原视频',
-				text: '粘贴文案'
+				description: '文案获取成功',
+				text: '粘贴文案',
+				params: {
+					input_url: ''
+				},
+				videoText:''
 			};
 		},
-		methods:{
-			doFn(){
-				if(this.text == '粘贴文案'){
+		methods: {
+			doFn() {
+				let that = this
+				if (that.text == '粘贴文案') {
 					uni.getClipboardData({
-						success: function (res) {
+						success: function(res) {
 							console.log(res.data);
-							this.value = res.data;
-							this.text = '清空内容'
-						}
+							that.params.input_url = res.data;
+							that.text = '清空内容'
+						},
+						fail: function(res) {
+							console.log(11111)
+						},
 					});
-				}else{
-					this.value = '';
-					this.text = '粘贴文案';
+				} else {
+					that.params.input_url = '';
+					that.text = '粘贴文案';
 				}
-				
 			},
-			blurFn(){
-				if(this.value != ''){
+			blurFn() {
+				if (this.params.input_url != '') {
 					this.text = '清空内容'
 				}
+			},
+			async parseVideo() {
+				const result = await wx.cloud.callContainer({
+					config: {
+						env: 'prod-1gon0lll2312bfb2',
+					},
+					path: '/api/wechat/mini/tools/parse-video',
+					method: 'POST',
+					data: this.params,
+					header: {
+						'X-WX-SERVICE': 'laravel-06z8',
+						'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
+					}
+				});
+				if(result.statusCode == 200){
+					if (result.data.code == 2001) {
+						this.videoText = result.data.data.title;
+					} else {
+						uni.showToast({
+							title: '您暂无此权限！',
+							icon: 'fail',
+							duration: 2000
+						});
+					}
+					
+				}
+			},
+			saveText () {
+				let that = this
+				uni.setClipboardData({
+					data: that.videoText,
+					success: function() {
+						uni.showToast({
+							title: '内容已复制',
+							duration: 2000,
+							icon: 'success'
+						});
+						// uni.hideToast();
+					},
+					fail: function(err) {
+						uni.showToast({
+							title: '复制失败',
+							duration: 2000,
+							icon: 'fail'
+						});
+					}
+				})
 			}
 		}
 	}
@@ -85,17 +157,23 @@
 			padding: 10px;
 
 			.video {
-				width: 151px;
+				width: 100%;
+				height: 100%;
+				object-fit: fill;
 			}
-			.video-text{
+
+			.video-text {
 				width: 100%;
 				margin: 0 auto;
-				.video-alert{
+
+				.video-alert {
 					margin: 0 auto;
 				}
-				.save-picture{
+
+				.save-picture {
 					margin-top: 20px;
-					button{
+
+					button {
 						width: 160px;
 						margin: 0 auto;
 					}
@@ -104,5 +182,4 @@
 		}
 
 	}
-
 </style>

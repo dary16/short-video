@@ -1,6 +1,14 @@
 <template>
 	<view>
-		<view class="search-box">
+		<view class="mode-box">
+			<u-empty
+			        mode="list"
+			        text="模板资源正在整理,请耐心等候!"
+			>
+			</u-empty>
+		</view>
+		
+		<!-- <view class="search-box">
 			<u-row customStyle="margin-bottom: 10px">
 				<u-col span="10">
 					<u-search shape="round" v-model="keyword" :showAction="false" :clearabled="true" placeholder="请输入搜索词"></u-search>
@@ -26,7 +34,7 @@
 					</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -196,6 +204,12 @@
 .search-box{
 	width: 94%;
 	margin: 0 auto;
+}
+.mode-box{
+	position: fixed;
+	top: 28%;
+	right: 0;
+	left: 0;
 }
 .container{
 	font-size: 14rpx;
