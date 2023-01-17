@@ -34,7 +34,7 @@
 					<u-row class="good-box">
 						<u-col span="4">
 							<div class="flex-content">
-								<u-image :src="item.images[0]" width="90px" height="90px" :lazy-load="true"></u-image>
+								<u-image :src="item.images[0]" radius="6" width="90px" height="90px" :lazy-load="true"></u-image>
 							</div>
 						</u-col>
 						<u-col span="8">
@@ -333,17 +333,18 @@
 				text-align: left;
 
 				.good-price {
-					color: #f00;
+					color: #000000;
 					font-size: 14px;
 					display: inline-block;
+					font-weight: 600;
 				}
 
 				.good-tag {
 					float: right;
-					background-color: #f5cfad;
-					color: #f00;
+					background-color: #ffeee5;
+					color: #ff406c;
 					border-radius: 16px;
-					padding: 2px 8px;
+					padding: 4px 10px;
 					font-size: 12px;
 				}
 			}
