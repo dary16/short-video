@@ -4,7 +4,10 @@
 		"style": {
 			"navigationBarTitleText": "",
 			"enablePullDownRefresh": true,
-			"onReachBottomDistance": 100
+			"onReachBottomDistance": 100,
+			"app-plus": {
+				"titleNView": false
+			}
 		}
 	}, {
 		"path": "pages/get-video/get-video",
@@ -31,7 +34,8 @@
 		"path": "pages/get-module/get-module",
 		"style": {
 			"navigationBarTitleText": "",
-			"enablePullDownRefresh": false
+			"enablePullDownRefresh": true,
+			"onReachBottomDistance": 100
 		}
 
 	}, {
@@ -45,7 +49,10 @@
 		"path": "pages/mine/mine",
 		"style": {
 			"navigationBarTitleText": "",
-			"enablePullDownRefresh": false
+			"enablePullDownRefresh": false,
+			"app-plus": {
+				"titleNView": false
+			}
 		}
 
 	}, {

@@ -30,20 +30,20 @@
 			return {
 				wait_text: '',
 				description: '检测成功',
-				text: '粘贴内容',
+				text: '粘贴文本',
 				show: false,
 				forbidText: ''
 			};
 		},
-		methods:{
-			doFn(){
-				let that = this
-				that.show = false
+		methods: {
+			doFn() {
+				let that = this;
+				that.show = false;
 				if (that.text == '粘贴文本') {
 					uni.getClipboardData({
 						success: function(res) {
 							that.wait_text = res.data;
-							that.text = '清空内容'
+							that.text = '清空内容';
 						},
 						fail: function(res) {
 							console.log(11111)
@@ -53,37 +53,45 @@
 					that.wait_text = '';
 					that.text = '粘贴文本';
 				}
-				
+
 			},
 			async checkText() {
+				uni.showLoading({
+					title: '加载中'
+				});
+
 				const result = await wx.cloud.callContainer({
 					config: {
 						env: 'prod-1gon0lll2312bfb2',
 					},
 					path: '/api/wechat/mini/tools/check-content',
 					method: 'POST',
-					data: {content: this.wait_text},
+					data: {
+						content: this.wait_text
+					},
 					header: {
 						'X-WX-SERVICE': 'laravel-06z8',
 						'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
 					}
 				});
-				if(result.statusCode == 200){
+				if (result.statusCode == 200) {
 					if (result.data.code == 2001 && result.data.data.is_invalid) {
-						this.show = true
+						this.show = true;
 						this.forbidText = result.data.data.words.join('、');
+						uni.hideLoading();
 					} else {
 						uni.showToast({
 							title: result.data.msg,
 							icon: 'fail',
 							duration: 2000
 						});
+						uni.hideLoading();
 					}
-					
+
 				}
 			},
-			blurFn(){
-				if(this.wait_text != ''){
+			blurFn() {
+				if (this.wait_text != '') {
 					this.text = '清空内容'
 				}
 				console.log('失去焦点');
@@ -128,31 +136,36 @@
 			.video {
 				width: 151px;
 			}
-			.video-text{
+
+			.video-text {
 				width: 100%;
 				margin: 0 auto;
-				.video-alert{
+
+				.video-alert {
 					margin: 0 auto;
 				}
-				.save-picture{
+
+				.save-picture {
 					margin-top: 20px;
-					button{
+
+					button {
 						width: 160px;
 						margin: 0 auto;
 					}
 				}
 			}
 		}
-		.forbid-result{
+
+		.forbid-result {
 			width: 96%;
 			border-radius: 8px;
 			margin: 0 auto;
 			background-color: #fff;
 			padding: 10px 20px;
+
 			.title {
-				color:#ff007f;
+				color: #ff007f;
 			}
 		}
 	}
-
 </style>

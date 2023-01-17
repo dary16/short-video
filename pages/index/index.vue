@@ -24,12 +24,13 @@
 			</u-grid>
 		</view>
 		<view class="goods-list">
-			<!-- <view class="goods-title">商品列表</view> -->
-			<u-empty mode="list" text="商品待添加,请耐心等候!">
+			<view class="goods-title">商品列表</view>
+			<!-- <u-empty mode="list" text="商品待添加,请耐心等候!"> -->
 			</u-empty>
-			<!-- <view v-if="loading"></view> -->
-			<!-- <template>
-				<view v-if="goodsList.length > 0" v-for="(item,index) in goodsList" :key="index" @click="goodInfo(item)">
+			<view v-if="loading"></view>
+			<template>
+				<view class="good-wrap" v-if="goodsList.length > 0" v-for="(item,index) in goodsList" :key="index"
+					@click="goodInfo(item)">
 					<u-row class="good-box">
 						<u-col span="4">
 							<div class="flex-content">
@@ -41,26 +42,22 @@
 							<div class="good-info">
 								<view class="good-price">价格：¥{{item.original_price}}</view>
 								<view class="good-tag">
-									高佣 {{item.discount}}
-									 <!-- <u-badge :type="type" max="99" :value="item.discount"></u-badge> -->
-			<!-- <u-tag bgColor="#f5cfad" size="mini" color="#f00" shape="circle" borderColor="#f5cfad" :text="item.discount"></u-tag> -->
-			<!-- </view>
+									高佣 {{item.discount}}%
+									<!-- <u-badge :type="type" max="99" :value="item.discount"></u-badge> -->
+									<!-- <u-tag bgColor="#f5cfad" size="mini" color="#f00" shape="circle" borderColor="#f5cfad" :text="item.discount"></u-tag> -->
+								</view>
 							</div>
 						</u-col>
 					</u-row>
 				</view>
 				<view v-else>
-					<u-empty
-					        mode="list"
-							text="暂无数据"
-					>
+					<u-empty mode="list" text="暂无数据">
 					</u-empty>
 				</view>
 			</template>
-			
-			<u-loadmore :status="status" /> -->
+			<uni-load-more :contentText="contentText" :status="status"></uni-load-more>
 		</view>
-
+		<u-back-top :scroll-top="scrollTop" top="600"></u-back-top>
 		<u-tabbar :value="currentNum" @change="changeTab" :fixed="true" :border="false" :placeholder="false"
 			:safeAreaInsetBottom="false">
 			<u-tabbar-item text="首页" icon="home" @click="click1"></u-tabbar-item>
@@ -74,7 +71,7 @@
 		data() {
 			return {
 				currentNum: 0,
-				status: 'loadmore',
+				status: 'more',
 				loading: true,
 				href: 'https://uniapp.dcloud.io/component/README?id=uniui',
 				list1: [
@@ -124,23 +121,43 @@
 					},
 				],
 				goodsList: [],
+				scrollTop: 0,
 				params: {
 					page: 1,
 					page_size: 10
+				},
+				loadingText: '加载中...',
+				loadingType: 0,
+				contentText: {
+					contentdown: '正在加载...',
+					contentrefresh: '正在加载...',
+					contentnomore: '没有更多数据了'
 				}
 			}
 		},
 		onLoad() {
 			this.getGoodsList();
 		},
+		onShow() {
+			wx.hideHomeButton();
+		},
 		methods: {
 			change() {},
 			changeTab() {},
 			click1() {},
+			onPageScroll(e) {
+				this.scrollTop = e.scrollTop;
+			},
 			commonClass(i) {
 				return "iconlist" + i
 			},
 			async getGoodsList() {
+				if (this.loadingType !== 0) {
+					return false
+				}
+				this.loadingType = 1;
+				// 显示加载动画
+				uni.showNavigationBarLoading();
 				const result = await wx.cloud.callContainer({
 					config: {
 						env: 'prod-1gon0lll2312bfb2',
@@ -154,27 +171,34 @@
 					}
 				})
 				if (result.statusCode == 200) {
-					let {
-						page,
-						page_size
-					} = this.params;
 					let resultData = result.data.data.list;
-					if (resultData.length < page_size) {
-						this.status = 'nomore'
+					if (resultData.length < 1) {
+						this.loadingType = 2;
+						this.status = 'noMore';
+						uni.hideNavigationBarLoading();
+						return;
 					}
-					if (page == 1) {
-						this.goodsList = resultData
-					} else {
-						this.getGoodsList = [...this.goodsList, ...resultData];
+					if (resultData.length < 10) {
+						console.log('最后一页了');
+						this.status = 'noMore';
 					}
-				}
-				if (this.loading) {
-					setTimeout(() => {
-						this.loading = false;
-					}, 1000);
+					this.params.page++;
+					console.log(resultData.length, 666);
+					this.goodsList = this.goodsList.concat(resultData);
+					this.loadingType = 0;
+					uni.hideNavigationBarLoading();
 				}
 			},
+			// 下拉刷新
+			onPullDownRefresh() {
+				console.log('下拉刷新');
+			},
 			// 上拉加载
+			onReachBottom() {
+				setTimeout(() => {
+					this.getGoodsList();
+				}, 1000)
+			},
 			gridFn(i) {
 				if (i == 0) {
 					uni.navigateTo({
@@ -195,12 +219,13 @@
 				}
 			},
 			mineFn() {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '/pages/mine/mine'
 				})
 			},
 			goodInfo(data) {
 				let dataInfo = JSON.stringify(data);
+				console.log(dataInfo);
 				uni.navigateTo({
 					url: '/pages/good-info/good-info?dataInfo=' + dataInfo
 				})
@@ -264,9 +289,18 @@
 
 		.goods-list {
 			width: 100%;
-			margin-top: 50px;
+			margin-top: 20px;
 			// margin: 0 auto;
-			// margin-bottom: 50px;
+			margin-bottom: 50px;
+			.good-wrap{
+				background-color: #fff;
+				border-radius: 8px;
+				padding: 5px 10px;
+				margin-bottom: 10px;
+				width: 96%;
+				margin: 0 auto;
+				margin-top: 10px;
+			}
 
 			.goods-title {
 				font-size: 16px;
@@ -278,10 +312,6 @@
 			.good-box {
 				width: 96%;
 				margin: 0 auto;
-				background-color: #fff;
-				border-radius: 8px;
-				padding: 5px 10px;
-				margin-bottom: 10px;
 			}
 
 			.good-desc {
@@ -313,8 +343,8 @@
 					background-color: #f5cfad;
 					color: #f00;
 					border-radius: 16px;
-					padding: 0 6px;
-					font-size: 13px;
+					padding: 2px 8px;
+					font-size: 12px;
 				}
 			}
 		}

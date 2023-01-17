@@ -11,7 +11,7 @@
 			<view class="left-text">
 				<view class="left">
 					<view class="text-top">专属高佣</view>
-					<view class="text-bottom">{{dataList.discount}}</view>
+					<view class="text-bottom">{{dataList.discount}}%</view>
 					<!-- <u--text color="#fff" size="13" text="专属高佣"></u--text>
 					<u--text :block="false" size="18" color="#fff" text="40%"></u--text> -->
 				</view>
@@ -22,7 +22,9 @@
 			</view>
 			<view class="right-text">
 				<view class="right">
-					<view class="text-top">距结束</view>
+					<view class="text-top">预估可赚佣金</view>
+					<view class="text-bottom">¥{{Math.floor(dataList.original_price * dataList.discount * 0.01)}}</view>
+					<!-- <view class="text-top">距结束</view>
 					<view class="text-bottom">
 						<u-count-down :time="30 * 60 * 60 * 1000" format="DD:HH:mm:ss" autoStart millisecond>
 							<view class="time">
@@ -33,7 +35,7 @@
 								<text class="time__item">{{ timeData.second }}&nbsp;秒</text>
 							</view>
 						</u-count-down>
-					</view>
+					</view> -->
 				</view>
 			</view>
 		</view>
@@ -122,15 +124,13 @@
 			<u-loadmore loadmoreText="商品详情" line />
 		</view>
 		<view class="list-img" v-for="(item,index) in list" :key="index">
-			<u--image :showLoading="true" :src="item" mode="widthFix"></u--image>
+			<image class="info-img" :src="item" mode="widthFix"></image>
+			<!-- <u--image :showLoading="true" :src="item" mode="widthFix"></u--image> -->
 		</view>
 		<view class="list-bottom">
 			<u-row customStyle="margin-bottom: 10px" gutter="10">
-				<u-col span="6">
-					<u--text type="primary" :plain="true" text="新手帮助" align="center"></u--text>
-				</u-col>
-				<u-col span="6">
-					<u-button type="primary" text="复制商品链接"></u-button>
+				<u-col span="12">
+					<u-button type="primary" text="复制商品链接" @click="copyFn"></u-button>
 				</u-col>
 			</u-row>
 		</view>
@@ -152,18 +152,15 @@
 				dataList: {},
 				imgList: [{
 					src: ''
-				}]
+				}],
+				link: ''
 			};
 		},
 		onLoad(v) {
 			let data = v;
-			
-			console.log(1111);
-			console.log(data);
-			console.log(data.dataInfo)
-			// this.dataList = JSON.parse(data);
-			// console.log(this.dataList);
-			this.list = data.images;
+			this.dataList = JSON.parse(data.dataInfo);
+			this.list = this.dataList.images;
+			this.link = this.dataList.goods_link;
 			// this.getTime();
 		},
 		mounted() {
@@ -240,6 +237,27 @@
 				// 	console.log(this.timeData)
 				// },1000)
 			},
+			copyFn(){
+				let that = this;
+				uni.setClipboardData({
+					data: that.link,
+					success: function() {
+						uni.showToast({
+							title: '链接已复制',
+							duration: 2000,
+							icon: 'success'
+						});
+						// uni.hideToast();
+					},
+					fail: function(err) {
+						uni.showToast({
+							title: '复制失败',
+							duration: 2000,
+							icon: 'fail'
+						});
+					}
+				})
+			}
 		}
 	}
 </script>
@@ -273,7 +291,7 @@
 		.right-text {
 			height: 40px;
 			text-align: right;
-			width: 56%;
+			width: 40%;
 			position: absolute;
 			right: 0;
 			top: 0;
@@ -299,7 +317,7 @@
 		.left-text {
 			position: absolute;
 			padding: 10px;
-			width: 44%;
+			width: 60%;
 			height: 40px;
 			left: 0;
 			bottom: 0;
@@ -385,7 +403,14 @@
 	}
 
 	.list-img {
+		width: 100%;
+		text-align: center;
 		margin-bottom: 10px;
+		.info-img{
+			width: 94%;
+			margin: 0 auto;
+			border-radius: 5px;
+		}
 	}
 
 	.inline-text {

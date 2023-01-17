@@ -73,6 +73,9 @@
 				}
 			},
 			async parseVideo() {
+				uni.showLoading({
+					title: '加载中'
+				});
 				const result = await wx.cloud.callContainer({
 					config: {
 						env: 'prod-1gon0lll2312bfb2',
@@ -88,12 +91,14 @@
 				if(result.statusCode == 200){
 					if (result.data.code == 2001) {
 						this.videoText = result.data.data.title;
+						uni.hideLoading();
 					} else {
 						uni.showToast({
 							title: '您暂无此权限！',
 							icon: 'fail',
 							duration: 2000
 						});
+						uni.hideLoading();
 					}
 					
 				}
