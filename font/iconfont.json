@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "20384486",
+      "name": "图文",
+      "font_class": "tuwen",
+      "unicode": "ec9d",
+      "unicode_decimal": 60573
+    },
+    {
       "icon_id": "10450959",
       "name": "note记事本",
       "font_class": "note",

@@ -188,7 +188,7 @@
 		text-align: center;
 		font-size: 12px;
 		color: #acacac;
-		padding: 20px 30px 50px 30px;
+		padding: 20px 30px 30px 30px;
 	}
 
 	.img-list {
@@ -216,7 +216,7 @@
 			font-size: 12px;
 			color: #d0d0d0;
 			text-align: center;
-			padding: 50px 30px 20px 30px;
+			padding: 30px 30px 20px 30px;
 		}
 
 		.grid-box {

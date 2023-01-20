@@ -62,6 +62,13 @@
 			"enablePullDownRefresh": false
 		}
 
+	}, {
+		"path": "pages/get-picture/get-picture",
+		"style": {
+			"navigationBarTitleText": "图文提取",
+			"enablePullDownRefresh": false
+		}
+
 	}],
 	"easycom": {
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"

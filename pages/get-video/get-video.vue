@@ -137,6 +137,12 @@
 							});
 						}
 						
+					}else{
+						uni.showToast({
+							title: '您暂无此权限!',
+							icon: 'fail',
+							duration: 2000
+						});
 					}
 				}
 			},

@@ -1,12 +1,5 @@
 <template>
 	<view>
-		<!-- <view class="mode-box">
-			<u-empty
-			        mode="list"
-			        text="模板资源正在整理,请耐心等候!"
-			>
-			</u-empty>
-		</view> -->
 		<view class="type-box">
 			<view class="type-item" :class="[activeIndex == index ? 'active' : '']" v-for="(item,index) in typelist"
 				:key="item.id" @click="typeFn(item.id,index)">{{item.title}}</view>
@@ -17,7 +10,8 @@
 					<image mode="widthFix" :src="item.images[0]" @click="imageFn(item)"></image>
 					<view class="text-box">
 						<view class="left">
-							浏览量 {{item.vritual_viewed}}
+							<view class="left"><u-icon name="eye"></u-icon></view>
+							<view class="right">{{ item.vritual_viewed }}</view>
 						</view>
 						<view class="right">
 							发布于 {{item.updated_at.slice(0,10)}}
@@ -234,13 +228,14 @@
 			.text-box {
 				background-color: #fff;
 				padding: 10px 4px;
+				font-size: 12px;
 
 				.left {
-					width: 35%;
+					width: 33%;
 				}
 
 				.right {
-					width: 63%;
+					width: 65%;
 				}
 
 				.left,
@@ -248,6 +243,8 @@
 					display: inline-block;
 					font-size: 12px;
 					color: #626262;
+					height: 16px;
+					line-height: 16px;
 				}
 			}
 		}

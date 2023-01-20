@@ -21,6 +21,10 @@
 					<view class="icon iconfont icon-weijincijiance iconlist3"></view>
 					<text class="grid-text">违禁词检测</text>
 				</u-grid-item>
+				<u-grid-item @click="gridFn(4)">
+					<view class="icon iconfont icon-tuwen iconlist4"></view>
+					<text class="grid-text">图文提取</text>
+				</u-grid-item>
 			</u-grid>
 		</view>
 		<view class="goods-list">
@@ -216,6 +220,10 @@
 					uni.navigateTo({
 						url: '/pages/get-forbid/get-forbid'
 					})
+				} else if (i == 4) {
+					uni.navigateTo({
+						url: '/pages/get-picture/get-picture'
+					})
 				}
 			},
 			mineFn() {
@@ -256,8 +264,8 @@
 	.iconlist2 {
 		color: #ef9949;
 		font-size: 40px;
-		height: 40px;
-		line-height: 40px;
+		height: 35px;
+		line-height: 36px;
 	}
 
 	.iconlist3 {
@@ -266,6 +274,13 @@
 		height: 36px;
 		line-height: 40px;
 	}
+	.iconlist4 {
+		color: #ff8980;
+		font-size: 36px;
+		height: 34px;
+		line-height: 34px;
+		margin-top: 10px;
+	}	
 
 	.container {
 		padding: 20px;
@@ -280,9 +295,10 @@
 			margin-top: 20px;
 			background-color: #fff;
 			border-radius: 8px;
+			padding-top: 10px;
 
 			.grid-text {
-				padding: 10px 4px;
+				padding: 6px 4px;
 				font-size: 12px;
 			}
 		}
