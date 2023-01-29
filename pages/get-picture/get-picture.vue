@@ -2,28 +2,29 @@
 	<view>
 		<u-alert title="上传图片识别文字" fontSize="18" center="TRUE" type = "warning" effect="dark" ></u-alert>
 		<view class="text-wrap up-img">
-			<u-row
-			            justify="space-between"
-			    >
-			        <u-col
-			                span="4"
-			                offset="4"
-			        >
-			            <u-upload uploadText="点击上传图片" :fileList="fileListOne" @afterRead="afterRead" @delete="deletePic"
-			             name="1" multiple="false" :maxCount="1"></u-upload>
-			        </u-col>
-			    </u-row>
-			
+			<u-row justify="space-between">
+				<u-col span="4" offset="4">
+					<u-upload uploadText="点击上传图片" :fileList="fileListOne" @afterRead="afterRead()" @delete="deletePic()"
+					 name="1" multiple="false" :maxCount="1"></u-upload>
+				</u-col>
+			</u-row>
 		</view>
 		<view class="text-wrap" v-show="imageText != ''">
 			<view class="content">
-				<u--text type="info" :text="imageText"></u--text>
+				<u--textarea v-model="imageText" maxlength="400" count autoHeight></u--textarea>
+				<!-- <u--text type="info" :text="imageText"></u--text> -->
 			</view>
 		</view>
-		<view v-show="imageText != ''">
-			<view class="save-img" v-show="imageText != ''">
-				<u-button type="primary" text="一键复制文本" @click="copyText()"></u-button>
-			</view>
+		<view class="save-img" v-show="imageText != ''">
+			<u-row justify="space-between">
+				<u-col span="5">
+					<u-button type="error" text="重置图片文字" @click="deletePic()"></u-button>
+				</u-col>
+				<u-col span="2"></u-col>
+				<u-col span="5">
+					<u-button type="primary" text="一键复制文本" @click="copyText()"></u-button>
+				</u-col>
+			</u-row>
 		</view>
 	</view>
 </template>
@@ -181,6 +182,7 @@
 	.save-img {
 		text-align: center;
 		width: 94%;
-		margin: 0 auto;
+		margin: 15px auto;
+		padding-bottom: 3rem;
 	}
 </style>
