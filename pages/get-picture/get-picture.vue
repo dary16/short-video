@@ -30,6 +30,7 @@
 </template>
 
 <script>
+	import ENV_DATA from '@/util/util.js'
 	export default {
 		data() {
 			return {
@@ -47,12 +48,12 @@
 			async afterRead(event) {
 				const result = await wx.cloud.callContainer({
 					config: {
-						env: 'prod-1gon0lll2312bfb2',
+						env: this.ENV_DATA.env,
 					},
 					path: '/api/wechat/mini/user/check-rights',
 					method: 'GET',
 					header: {
-						'X-WX-SERVICE': 'laravel-06z8',
+						'X-WX-SERVICE': this.ENV_DATA.service,
 						'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
 					}
 				})
@@ -85,7 +86,7 @@
 			uploadFilePromise(url) {
 				return new Promise((resolve, reject) => {
 					let a = uni.uploadFile({
-						url: 'https://laravel-06z8-26118-6-1316511786.sh.run.tcloudbase.com/api/wechat/mini/tools/parse-pic', // 仅为示例，非真实的接口地址
+						url: ENV_DATA.baseUrl+'/api/wechat/mini/tools/parse-pic', // 仅为示例，非真实的接口地址
 						filePath: url,
 						name: 'video_url',
 						success: (res) => {

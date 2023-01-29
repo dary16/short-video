@@ -65,12 +65,12 @@
 			async getTypeList() {
 				const result = await wx.cloud.callContainer({
 					config: {
-						env: 'prod-1gon0lll2312bfb2',
+						env: this.ENV_DATA.env,
 					},
 					path: '/api/wechat/mini/contents/category-list',
 					method: 'GET',
 					header: {
-						'X-WX-SERVICE': 'laravel-06z8',
+						'X-WX-SERVICE': this.ENV_DATA.service,
 						'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
 					}
 				});
@@ -78,7 +78,7 @@
 					if (result.data.code == 2001) {
 						// this.typelist.push(result.data.data);
 						this.typelist = this.typelist.concat(result.data.data);
-						console.log(this.typelist);
+						// console.log(this.typelist);
 					} else {
 						uni.showToast({
 							title: '您暂无此权限！',
@@ -100,18 +100,18 @@
 					return false
 				}
 				// this.loadingType = 1;
-				console.log('start');
+				// console.log('start');
 				// 显示加载动画
 				uni.showNavigationBarLoading();
 				const result = await wx.cloud.callContainer({
 					config: {
-						env: 'prod-1gon0lll2312bfb2',
+						env: this.ENV_DATA.env,
 					},
 					path: '/api/wechat/mini/contents/article-list',
 					method: 'GET',
 					data: this.params,
 					header: {
-						'X-WX-SERVICE': 'laravel-06z8',
+						'X-WX-SERVICE':  this.ENV_DATA.service,
 						'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
 					}
 				});
@@ -125,7 +125,7 @@
 							return;
 						}
 						if (resultData.length < 10) {
-							console.log('最后一页了');
+							// console.log('最后一页了');
 							this.status = 'noMore';
 						}
 						
@@ -135,7 +135,7 @@
 							this.list = resultData;
 						}
 						this.params.page++;
-						console.log(this.list,'list');
+						// console.log(this.list,'list');
 						this.loadingType = 0;
 						uni.hideNavigationBarLoading();
 					} else {
@@ -153,7 +153,7 @@
 			},
 			// 下拉刷新
 			onPullDownRefresh() {
-				console.log('下拉刷新');
+				// console.log('下拉刷新');
 			},
 			// 上拉加载
 			onReachBottom() {
@@ -163,7 +163,7 @@
 			},
 			imageFn(data) {
 				let dataInfo = JSON.stringify(data);
-				console.log(dataInfo);
+				// console.log(dataInfo);
 				uni.navigateTo({
 					url: '/pages/image-arr/image-arr?dataInfo=' + dataInfo
 				})

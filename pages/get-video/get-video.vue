@@ -115,13 +115,13 @@
 				}else{
 					const result = await wx.cloud.callContainer({
 						config: {
-							env: 'prod-1gon0lll2312bfb2',
+							env: this.ENV_DATA.env,
 						},
 						path: '/api/wechat/mini/tools/parse-video',
 						method: 'POST',
 						data: this.params,
 						header: {
-							'X-WX-SERVICE': 'laravel-06z8',
+							'X-WX-SERVICE': this.ENV_DATA.service,
 							'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
 						}
 					});
@@ -162,7 +162,7 @@
 									scope: "scope.writePhotosAlbum",
 									success: () => {
 										uni.downloadFile({
-											url: "https://laravel-06z8-26118-6-1316511786.sh.run.tcloudbase.com/api/wechat/mini/contents/video-steam?video_url=" + escape(_url),
+											url: this.ENV_DATA.baseUrl+"/api/wechat/mini/contents/video-steam?video_url=" + escape(_url),
 											success(res) {
 												if (res.statusCode === 200) {
 													uni.saveVideoToPhotosAlbum({
@@ -221,7 +221,7 @@
 								// 如果已有相册权限，直接保存图片到系统相册
 								uni.downloadFile({
 									
-									url: "https://laravel-06z8-26118-6-1316511786.sh.run.tcloudbase.com/api/wechat/mini/contents/video-steam?video_url=" + escape(_url),
+									url: this.ENV_DATA.baseUrl+"/api/wechat/mini/contents/video-steam?video_url=" + escape(_url),
 									success(res) {
 										if (res.statusCode === 200) {
 											uni.saveVideoToPhotosAlbum({

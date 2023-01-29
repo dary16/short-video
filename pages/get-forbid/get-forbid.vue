@@ -62,7 +62,7 @@
 
 				const result = await wx.cloud.callContainer({
 					config: {
-						env: 'prod-1gon0lll2312bfb2',
+						env: this.ENV_DATA.env,
 					},
 					path: '/api/wechat/mini/tools/check-content',
 					method: 'POST',
@@ -70,7 +70,7 @@
 						content: this.wait_text
 					},
 					header: {
-						'X-WX-SERVICE': 'laravel-06z8',
+						'X-WX-SERVICE': this.ENV_DATA.service,
 						'X-WX-OPENID': 'oLmqy5Di2l0DTrZNyEqXqvE9mnB8',
 					}
 				});
